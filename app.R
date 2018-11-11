@@ -33,10 +33,13 @@ data %>% filter(party=="I") %>% group_by(state) %>%
 colnames(ind_amount)[1]<-"st_abrev"
 ind_amount %<>% inner_join(y = state,by = "st_abrev") 
 
+
 ui <- fluidPage(
   plotlyOutput("plot"),
   verbatimTextOutput("click")
 )
+
+
 
 server <- function(input, output, session) {
   
@@ -65,3 +68,11 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+
+
+
+####
+#slider reference: https://plot.ly/r/sliders/
+# button reference: https://plot.ly/r/dropdowns/
+
+
