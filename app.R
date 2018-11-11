@@ -6,7 +6,7 @@ library(dplyr)
 #In data cleaning process, we first delete the contributors from the othercountries(outside the USA)
 #Then group the data by state
 data <- read.csv("11-5 MASSCONTRIBUTIONS-csv.csv")
-state<- read_csv("states.csv")
+state<- read.csv("states.csv")
 data$date <- as.Date(data$date,"%Y-%m-%d")
 data %<>% select(cycle,city,state,date,amount,party)
 total_donate <- data %>% 
@@ -30,7 +30,8 @@ server <- function(input, output, session) {
       projection = list(type = 'albers usa'),
       lakecolor = toRGB('white')
     )
-    plot_ly(z = total_donate, text = state.name, locations = state.abb,
+    plot_ly(z = total_donate$sum_donate, text = total_donate$st_name, 
+            locations = total_donate$st_abrev,
             type = 'choropleth', locationmode = 'USA-states') %>%
       layout(geo = g)
   })
