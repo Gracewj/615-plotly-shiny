@@ -5,10 +5,16 @@ library(dplyr)
 
 #In data cleaning process, we first delete the contributors from the othercountries(outside the USA)
 #Then group the data by state
-data <- read.csv("/Users/apple/Desktop/MA615 DSR/Class28/11-5 MASSCONTRIBUTIONS-csv.csv")
+data <- read.csv("11-5 MASSCONTRIBUTIONS-csv.csv")
+state<- read_csv("states.csv")
 data$date <- as.Date(data$date,"%Y-%m-%d")
 data %<>% select(cycle,city,state,date,amount,party)
-total_donate <- data %>% group_by(state) %>% summarise(sum_donate=sum(amount))
+total_donate <- data %>% 
+  group_by(state) %>% 
+  summarise(sum_donate=sum(amount))
+colnames(total_donate)[1]<-"st_abrev"
+total_donate %<>% inner_join(y = state,by = "st_abrev")
+
 
 ui <- fluidPage(
   plotlyOutput("plot"),
