@@ -61,7 +61,7 @@ ui <- fluidPage(
 
   )
 
-
+#combine data into one data frame to choose?
 
 server <- function(input, output, session) {
   
