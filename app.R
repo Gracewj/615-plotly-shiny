@@ -2,6 +2,7 @@ library(plotly)
 library(shiny)
 library(magrittr)
 library(dplyr)
+library(zoo)
 
 #Divide into four parts: total/rep/dom/ind
 #Total donate amount data
@@ -33,14 +34,35 @@ data %>% filter(party=="I") %>% group_by(state) %>%
 colnames(ind_amount)[1]<-"st_abrev"
 ind_amount %<>% inner_join(y = state,by = "st_abrev") 
 
+#Min of data and Max of data
+minDate <- as.Date("2016-06-05","%Y-%m-%d")
+maxDate <- as.Date("2018-10-17","%Y-%m-%d")
 
 
 ui <- fluidPage(
   plotlyOutput("plot"),
-  verbatimTextOutput("click")
-)
+  verbatimTextOutput("click"),
+  
+  # titlePanel("Contribution Map"),
+  # 
+  # sidebarLayout(      
+  # 
+  sliderInput("Date range slider", "Date Range",
+              min = as.Date(as.yearmon(minDate)),
+              max = as.Date(as.yearmon(maxDate)),
+              value = c(as.Date(as.yearmon(minDate)),as.Date(as.yearmon("2016-07-05")))),
+  
+  selectInput(inputId = "party",label = "Data",choices=c("Total","Democrates","Republicans","Independents"),
+               helpText("Choose the data you want to see in the map"),multiple = FALSE)
+  
+  # mainPanel(
+  #   plotOutput("plot")  
+  # )
+  # 
 
+  )
 
+#combine data into one data frame to choose?
 
 server <- function(input, output, session) {
   
@@ -56,18 +78,19 @@ server <- function(input, output, session) {
     )
     plot_ly(z = total_donate$sum_donate, text = total_donate$st_name, 
             locations = total_donate$st_abrev,
-            type = 'choropleth', locationmode = 'USA-states') %>%
+            type = 'choropleth', locationmode = 'USA-states',
+            colorscale='PuBu') %>%
       colorbar(title = "USD") %>% 
       layout(geo = g)
   })
+
   
   output$click <- renderPrint({
     d <- event_data("plotly_click")
-    if (is.null(d)) "Click on a state to view event data" else d
-  })
-  
+    if (is.null(d)) "Click on a state to view contribution amount" else d
+  }) 
+    
 }
-
 shinyApp(ui, server)
 
 
