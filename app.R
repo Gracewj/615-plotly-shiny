@@ -34,6 +34,7 @@ colnames(ind_amount)[1]<-"st_abrev"
 ind_amount %<>% inner_join(y = state,by = "st_abrev") 
 
 
+
 ui <- fluidPage(
   plotlyOutput("plot"),
   verbatimTextOutput("click")
