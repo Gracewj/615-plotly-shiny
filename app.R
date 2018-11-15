@@ -81,6 +81,9 @@ server <- function(input, output, session) {
       showlakes = TRUE,
       lakecolor = toRGB('white')
     )
+    
+  
+      
     plot_ly(z = total_donate$sum_donate, text = total_donate$st_name, 
             locations = total_donate$st_abrev,
             type = 'choropleth', locationmode = 'USA-states',
