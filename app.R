@@ -22,6 +22,7 @@ data %>% filter(party=="R") %>% group_by(state) %>%
 colnames(rep_amount)[1]<-"st_abrev"
 rep_amount %<>% inner_join(y = state,by = "st_abrev")
 colnames(rep_amount)[2] <- "rep_sum"
+rep_amount %<>% mutate(party=rep("Repu",dim(rep_amount)[1]))
 
 #Democrate donate amount data
 data %>% filter(party=="D") %>% group_by(state) %>% 
@@ -29,15 +30,21 @@ data %>% filter(party=="D") %>% group_by(state) %>%
 colnames(dem_amount)[1]<-"st_abrev"
 dem_amount %<>% inner_join(y = state,by = "st_abrev")
 colnames(dem_amount)[2] <- "dem_sum"
+dem_amount %<>% mutate(party=rep("Demo",dim(dem_amount)[1]))
 
 #Republican & Democrate together
 both_amount <- inner_join(dem_amount,rep_amount, by=c("st_abrev","st_name"))
+
 
 #Independent donate amount data 
 data %>% filter(party=="I") %>% group_by(state) %>% 
   summarise(sum_donate=sum(amount)) -> ind_amount
 colnames(ind_amount)[1]<-"st_abrev"
-ind_amount %<>% inner_join(y = state,by = "st_abrev") 
+ind_amount %<>% inner_join(y = state,by = "st_abrev")  
+ind_amount %<>% mutate(party=rep("Inde",dim(ind_amount)[1]))
+
+# Total data including party
+total_party<-rbind(dem_amount,ind_amount,rep_amount)
 
 #Min of data and Max of data
 minDate <- as.Date("2016-06-05","%Y-%m-%d")
