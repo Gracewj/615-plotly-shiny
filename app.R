@@ -21,12 +21,17 @@ data %>% filter(party=="R") %>% group_by(state) %>%
   summarise(sum_donate=sum(amount)) -> rep_amount
 colnames(rep_amount)[1]<-"st_abrev"
 rep_amount %<>% inner_join(y = state,by = "st_abrev")
+colnames(rep_amount)[2] <- "rep_sum"
 
 #Democrate donate amount data
 data %>% filter(party=="D") %>% group_by(state) %>% 
   summarise(sum_donate=sum(amount)) -> dem_amount
 colnames(dem_amount)[1]<-"st_abrev"
 dem_amount %<>% inner_join(y = state,by = "st_abrev")
+colnames(dem_amount)[2] <- "dem_sum"
+
+#Republican & Democrate together
+both_amount <- inner_join(dem_amount,rep_amount, by=c("st_abrev","st_name"))
 
 #Independent donate amount data 
 data %>% filter(party=="I") %>% group_by(state) %>% 
