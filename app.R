@@ -49,6 +49,9 @@ ind_amount<-ind_amount[-9,]
 
 # Total data including party
 total_party<-rbind(dem_amount,ind_amount,rep_amount)
+
+# We take a log of the donate money for better visual display
+
 total_party$sum_donate <- log(total_party$sum_donate+1)
 #Min of data and Max of data
 minDate <- as.Date("2016-06-05","%Y-%m-%d")
